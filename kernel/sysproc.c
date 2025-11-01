@@ -96,3 +96,10 @@ uint64 sys_hello(void) {
     printf("Hello, world!\n"); 
     return 0; 
 } 
+
+uint64 sys_trace(void) {
+    int mask;
+    argint(0, &mask);
+    myproc()->tracemask = mask;
+    return 0;
+}
