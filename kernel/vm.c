@@ -347,15 +347,6 @@ vmprint_walk(pagetable_t pagetable, int depth)
   }
 }
 
-// Print the page table starting from pagetable
-void
-vmprint(pagetable_t pagetable)
-{
-  printf("page table %p\n", pagetable);
-  vmprint_walk(pagetable, 1);
-}
-
-
 // Free user memory pages,
 // then free page-table pages.
 void
@@ -527,8 +518,10 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
 
 #ifdef LAB_PGTBL
 void
-vmprint(pagetable_t pagetable) {
-  // your code here
+vmprint(pagetable_t pagetable)
+{
+  printf("page table %p\n", pagetable);
+  vmprint_walk(pagetable, 1);
 }
 #endif
 
