@@ -318,6 +318,44 @@ freewalk(pagetable_t pagetable)
   kfree((void*)pagetable);
 }
 
+// Print the page table in a human-readable form
+static void
+vmprint_walk(pagetable_t pagetable, int depth)
+{
+  // there are 2^9 = 512 PTEs in a page table
+  for(int i = 0; i < 512; i++){
+    pte_t pte = pagetable[i];
+
+    // skip invalid entries
+    if((pte & PTE_V) == 0)
+      continue;
+
+    // indent according to depth
+    for(int d = 0; d < depth; d++){
+      printf(" ..");
+    }
+
+    uint64 pa = PTE2PA(pte);
+    printf("%d: pte %p pa %p\n", i, (void*)pte, (void*)pa);
+
+    // if this PTE points to a lower-level page table (non-leaf),
+    // recursively print that page table
+    if((pte & (PTE_R | PTE_W | PTE_X)) == 0){
+      pagetable_t child = (pagetable_t)pa;
+      vmprint_walk(child, depth + 1);
+    }
+  }
+}
+
+// Print the page table starting from pagetable
+void
+vmprint(pagetable_t pagetable)
+{
+  printf("page table %p\n", pagetable);
+  vmprint_walk(pagetable, 1);
+}
+
+
 // Free user memory pages,
 // then free page-table pages.
 void
