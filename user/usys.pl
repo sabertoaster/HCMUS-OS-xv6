@@ -38,6 +38,7 @@ entry("sleep");
 entry("uptime");
 entry("bind");
 entry("unbind");
+entry("pgaccess");
 entry("send");
 entry("recv");
 entry("pgpte");

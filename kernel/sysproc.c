@@ -74,6 +74,37 @@ sys_sleep(void)
 
 #ifdef LAB_PGTBL
 int
+sys_pgaccess(void)
+{
+  uint64 base;
+  int len;
+  uint64 mask_addr;
+  struct proc *p = myproc();
+  uint64 abits = 0;
+
+  argaddr(0, &base);
+  argint(1, &len);
+  argaddr(2, &mask_addr);
+
+  if(len > 64)
+    return -1;
+
+  for(int i = 0; i < len; i++){
+    uint64 va = base + i * PGSIZE;
+    pte_t *pte = walk(p->pagetable, va, 0);
+    if(pte && (*pte & PTE_V) && (*pte & PTE_A)){
+      abits |= (1L << i);
+      *pte &= ~PTE_A;
+    }
+  }
+
+  if(copyout(p->pagetable, mask_addr, (char *)&abits, sizeof(abits)) < 0)
+    return -1;
+
+  return 0;
+}
+
+int
 sys_pgpte(void)
 {
   uint64 va;

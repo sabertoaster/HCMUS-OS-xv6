@@ -28,6 +28,7 @@
 #define SYS_sigreturn 25
 #define SYS_symlink   26
 #define SYS_mmap      27
+#define SYS_pgaccess  35
 #define SYS_munmap    28
 #define SYS_bind      29
 #define SYS_unbind    30
